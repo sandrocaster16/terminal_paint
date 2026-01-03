@@ -52,16 +52,19 @@ class Game():
                     print(self.pixel_symbols[0], end="")
 
     def run(self):
+        sys.stdout.write('\033[2J\033[H')   # hide terminal's cursor
+        sys.stdout.write('\033[?25l')
+        sys.stdout.flush()
+
         while self.isRunning:
             # print
             self.print_pixels()
+
+            sys.stdout.write('\033[H')
             sys.stdout.flush()
 
             # input
             qwe = self.getch()
-
-            sys.stdout.write('\033[2J\033[H')
-            sys.stdout.write('\033[?25l')
 
             if (qwe == 'w'):
                 self.cursor_y = self.cursor_y-1
@@ -82,6 +85,9 @@ class Game():
                     self.pixel_on.add((self.cursor_x, self.cursor_y))
 
             elif (qwe == 'q'):
+                sys.stdout.write('\033[?25h')   # show terminal's cursor
+                sys.stdout.write('\033[0m')
+                sys.stdout.flush()
                 self.isRunning = False
 
 
