@@ -51,6 +51,48 @@ class Game():
                 else:
                     print(self.pixel_symbols[0], end="")
 
+    def parse_input(self, qwe):
+        # movement
+        if (qwe == 'w'):
+            if (self.cursor_y-1 < 0):
+                self.cursor_y = self.max_Y-1
+            else:
+                self.cursor_y = self.cursor_y-1
+        elif (qwe == 'a'):
+            if (self.cursor_x-1 < 0):
+                self.cursor_x = self.max_X-1
+            else:
+                self.cursor_x = self.cursor_x-1
+        elif (qwe == 's'):
+            if (self.cursor_y+1 > self.max_Y-1):
+                self.cursor_y = 0
+            else:
+                self.cursor_y = self.cursor_y+1
+        elif (qwe == 'd'):
+            if (self.cursor_x+1 > self.max_X-1):
+                self.cursor_x = 0
+            else:
+                self.cursor_x = self.cursor_x+1
+
+        # hide/show cursor
+        elif (qwe == 'f'):
+            self.cursor_on = not self.cursor_on
+
+        # set pixel
+        elif (qwe == ' '):
+            if ((self.cursor_x, self.cursor_y) in self.pixel_on):
+                self.pixel_on.remove((self.cursor_x, self.cursor_y))
+            else:
+                self.pixel_on.add((self.cursor_x, self.cursor_y))
+
+        # exit
+        elif (qwe == 'q'):
+            sys.stdout.write('\033[?25h')   # show terminal's cursor
+            sys.stdout.write('\033[0m')
+            sys.stdout.flush()
+            self.isRunning = False
+
+
     def run(self):
         sys.stdout.write('\033[2J\033[H')   # hide terminal's cursor
         sys.stdout.write('\033[?25l')
@@ -64,32 +106,9 @@ class Game():
             sys.stdout.flush()
 
             # input
-            qwe = self.getch()
+            c = self.getch()
 
-            if (qwe == 'w'):
-                self.cursor_y = self.cursor_y-1
-            elif (qwe == 'a'):
-                self.cursor_x = self.cursor_x-1
-            elif (qwe == 's'):
-                self.cursor_y = self.cursor_y+1
-            elif (qwe == 'd'):
-                self.cursor_x = self.cursor_x+1
-
-            elif (qwe == 'f'):
-                self.cursor_on = not self.cursor_on
-
-            elif (qwe == ' '):
-                if ((self.cursor_x, self.cursor_y) in self.pixel_on):
-                    self.pixel_on.remove((self.cursor_x, self.cursor_y))
-                else:
-                    self.pixel_on.add((self.cursor_x, self.cursor_y))
-
-            elif (qwe == 'q'):
-                sys.stdout.write('\033[?25h')   # show terminal's cursor
-                sys.stdout.write('\033[0m')
-                sys.stdout.flush()
-                self.isRunning = False
-
+            self.parse_input(c)
 
 
 #start
